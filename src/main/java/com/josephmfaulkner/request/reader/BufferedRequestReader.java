@@ -21,13 +21,20 @@ public class BufferedRequestReader implements RequestReader{
 	public void parseRequest(Request request) {
 		try {
 			String methodHeader    = reader.readLine();
+			System.out.println(String.format("REQUEST: %s", methodHeader));
+			
+			if(methodHeader == null)
+			{
+				success = false; 
+				return;
+			}
+			
 			String requestMethod[] = methodHeader.split(" ");
 			
 			request.SetMethod(requestMethod[0]);
 			request.SetResource(requestMethod[1]);
 			request.SetProtocol(requestMethod[2]);
 			
-			System.out.println("<header>");
 			String headerLine = reader.readLine();
 			while( headerLine != null)
 			{
@@ -35,19 +42,14 @@ public class BufferedRequestReader implements RequestReader{
 				{
 					break;
 				}
-				System.out.println("	"+ headerLine);
 				String header[] = headerLine.split(":");
 				request.SetHeader(header[0], header[1]);
 				
 				headerLine = reader.readLine(); 
 			}
-			System.out.println("</header>");
 			success = true; 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.err.println("Error Parsing Request");
 			success = false;
-			e.printStackTrace();
 		}
 	}
 }

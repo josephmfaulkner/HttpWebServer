@@ -12,7 +12,15 @@ public class RequestHandler {
 	
 	private String formatResource(String resource)
 	{
-		return resource.substring(1).replaceAll("/", File.separator);
+		try 
+		{
+			return resource.substring(1).replaceAll("/", File.separator);
+		}
+		catch(Exception e)
+		{
+			return "";
+		}
+	
 	}
 	
 	private boolean fileExists(String filePath)
@@ -31,11 +39,13 @@ public class RequestHandler {
 		}
 		String resourceFilePath = String.format("%s%s%s%s%s", workingDir, File.separator, "public_html", File.separator, requestedResource);
 		
-		System.out.println("Request:"+resourceFilePath);
+		System.out.println("File:"+resourceFilePath);
 		
 		if(!fileExists(resourceFilePath))
 		{
+			System.out.println("No such file (404)");
 			response.setStatus(404);
+			response.setBody("");
 			return;
 		}
 		
@@ -56,7 +66,6 @@ public class RequestHandler {
 			response.setBody(fileContent.toString());
 		
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -73,7 +82,8 @@ public class RequestHandler {
 			response.send();
 			return; 
 		}
-
+		
+		/*
 		StringBuilder headerString = new StringBuilder();
 		Set<String> headers = request.HeaderKeys();
 		for(String headerKey: headers)
@@ -81,7 +91,7 @@ public class RequestHandler {
 			String headerValue = request.GetHeader(headerKey);
 			headerString.append(headerKey+":"+headerValue+"</br>");
 		}		
-		
+		*/
 		matchResource(request.Resource(), response);
 		
 		//response.setBody(String.format("<html><head><title>HttpServerApp</title></head><body><h1>Welcome to the HttpServerApplication</h1><p> %s </p></body></html>",headerString.toString()));
