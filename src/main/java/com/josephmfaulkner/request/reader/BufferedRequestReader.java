@@ -43,8 +43,10 @@ public class BufferedRequestReader implements RequestReader{
 			}
 			System.out.println("</header>");
 			success = true; 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			System.err.println("Error Parsing Request");
+			success = false;
 			e.printStackTrace();
 		}
 	}

@@ -16,6 +16,7 @@ public class HttpServer {
 	
 	private HttpServer instance;
 	private boolean instanceSet = false;
+	private int errorCount = 0; 
 	
 	private int listeningPort;
 	private ServerSocket server;
@@ -46,21 +47,35 @@ public class HttpServer {
 	public void start() throws IOException
 	{
 		this.server = new ServerSocket(this.listeningPort);
+		System.out.println(String.format("Server Running on Port: %d",this.listeningPort));
 		
 		while(true)
 		{
-			this.socketConnection = server.accept();
-			this.socketRequest = new BufferedReader(new InputStreamReader(socketConnection.getInputStream()));
-			this.socketResponse = new PrintWriter(socketConnection.getOutputStream());
-	
-			Request request = new Request(new BufferedRequestReader(this.socketRequest));
-			Response response = new Response(new PrintResponseWriter(this.socketResponse));
-			
-			requestHandler.handleRequest(request,response);
-			
-			this.socketConnection.close();
-			this.socketRequest.close();
-			this.socketResponse.close();
+			try 
+			{
+				this.socketConnection = server.accept();
+				this.socketRequest = new BufferedReader(new InputStreamReader(socketConnection.getInputStream()));
+				this.socketResponse = new PrintWriter(socketConnection.getOutputStream());
+		
+				Request request = new Request(new BufferedRequestReader(this.socketRequest));
+				Response response = new Response(new PrintResponseWriter(this.socketResponse));
+				
+				requestHandler.handleRequest(request,response);
+				
+				this.socketConnection.close();
+				this.socketRequest.close();
+				this.socketResponse.close();
+			} 
+			catch(Exception exception)
+			{
+				exception.printStackTrace();
+				errorCount++;
+				if(errorCount > Configuration.ERRORS_ALLOWED)
+				{
+					System.err.println("Stopping Server");
+					break; 
+				}
+			}
 		}	
 	}
 }

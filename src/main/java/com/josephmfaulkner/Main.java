@@ -5,7 +5,7 @@ import java.io.IOException;
 public class Main {
 	
 	public static void main(String[] args) {
-		int listeningPort = 7500; 
+		int listeningPort = Configuration.LISTENING_PORT; 
 		HttpServer server = new HttpServer(listeningPort);
 		try {
 			server.start();

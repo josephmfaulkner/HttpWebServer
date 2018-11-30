@@ -71,6 +71,7 @@ public class RequestHandler {
 		{
 			response.setStatus(401);
 			response.send();
+			return; 
 		}
 
 		StringBuilder headerString = new StringBuilder();
