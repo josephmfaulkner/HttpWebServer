@@ -62,9 +62,9 @@ public class HttpServer {
 				
 				requestHandler.handleRequest(request,response);
 				
-				this.socketConnection.close();
-				this.socketRequest.close();
-				this.socketResponse.close();
+				//this.socketConnection.close();
+				//this.socketRequest.close();
+				//this.socketResponse.close();
 			} 
 			catch(Exception exception)
 			{
